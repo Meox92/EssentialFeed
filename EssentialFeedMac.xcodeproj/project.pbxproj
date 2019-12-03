@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B14444562397096700E86B05 /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14444552397096700E86B05 /* RemoteFeedLoader.swift */; };
 		B16A78F4237CA8E200DDA13D /* EssentialFeedMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B16A78EA237CA8E100DDA13D /* EssentialFeedMac.framework */; };
 		B16A78F9237CA8E200DDA13D /* EssentialFeedMacTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16A78F8237CA8E200DDA13D /* EssentialFeedMacTests.swift */; };
 		B16A78FB237CA8E200DDA13D /* EssentialFeedMac.h in Headers */ = {isa = PBXBuildFile; fileRef = B16A78ED237CA8E100DDA13D /* EssentialFeedMac.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -26,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B14444552397096700E86B05 /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 		B16A78EA237CA8E100DDA13D /* EssentialFeedMac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeedMac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B16A78ED237CA8E100DDA13D /* EssentialFeedMac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EssentialFeedMac.h; sourceTree = "<group>"; };
 		B16A78EE237CA8E100DDA13D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -56,6 +58,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B14444542397095200E86B05 /* Feed API */ = {
+			isa = PBXGroup;
+			children = (
+				B14444552397096700E86B05 /* RemoteFeedLoader.swift */,
+			);
+			path = "Feed API";
+			sourceTree = "<group>";
+		};
 		B16A78E0237CA8E100DDA13D = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +87,7 @@
 		B16A78EC237CA8E100DDA13D /* EssentialFeedMac */ = {
 			isa = PBXGroup;
 			children = (
+				B14444542397095200E86B05 /* Feed API */,
 				B16A7904237CA8F800DDA13D /* FeedItem.swift */,
 				B16A7906237CA8FF00DDA13D /* FeedLoader.swift */,
 				B16A78ED237CA8E100DDA13D /* EssentialFeedMac.h */,
@@ -206,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B16A7907237CA8FF00DDA13D /* FeedLoader.swift in Sources */,
+				B14444562397096700E86B05 /* RemoteFeedLoader.swift in Sources */,
 				B16A7905237CA8F800DDA13D /* FeedItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
