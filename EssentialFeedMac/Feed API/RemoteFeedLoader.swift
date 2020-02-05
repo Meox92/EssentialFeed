@@ -8,15 +8,6 @@
 
 import Foundation
 
-public enum HTTPClientResult {
-    case success(Data, HTTPURLResponse)
-    case failure(Error)
-}
-
-public protocol HTTPClient {
-    func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void)
-}
-
 
 public final class RemoteFeedLoader {
     private var client: HTTPClient
@@ -38,52 +29,20 @@ public final class RemoteFeedLoader {
     }
     
     public func load(completion: @escaping (RemoteFeedLoader.Result) -> Void) {
-        client.get(from: self.url) { result in
+        client.get(from: self.url) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .failure:
                 completion(.failure(.connectivity))
             case let .success(data, response):
-                if let items = try? FeedItemsMapper.map(data, response) {
-                     completion(.success(items))
-                } else {
-                    completion(.failure(.invalidData))
-                }
-                
-
+                let result = FeedItemsMapper.map(data, from: response) // map è una funziona statica, quindi verrà invocata anche quando l'istanza di RemoteFeedLoader viene deallocata
+                completion(result)
             }
         }
     }
     
-    
-    
-    
-}
 
-private class FeedItemsMapper {
-    
-    private struct Root: Decodable {
-        let items: [Item]
-    }
 
-    private struct Item: Decodable {
-        let id: UUID
-        let description: String?
-        let location: String?
-        let image: URL
-        
-        var item: FeedItem {
-            return FeedItem(id: id, description: description, location: location, imageURL: image)
-        }
-    }
-
-    
-    
-    static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [FeedItem] {
-        guard response.statusCode == 200 else {
-            throw RemoteFeedLoader.Error.invalidData
-        }
-        return try JSONDecoder().decode(Root.self, from: data).items.map {$0.item}
-    }
 }
 
 
