@@ -30,7 +30,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClient() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(.connectivity), when: {
+        expect(sut, toCompleteWith: failure(.connectivity), when: {
             let clientError = NSError(domain: "Test", code: 0, userInfo: nil)
             client.complete(with: clientError)
         })
@@ -41,16 +41,22 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         [199, 201, 300, 400, 500].enumerated().forEach { index,statusCode in
-            var capturedError = [RemoteFeedLoader.Result]()
+            let expectedResult = RemoteFeedLoader.Result.failure(RemoteFeedLoader.Error.invalidData)
+            let exp = expectation(description: "Wait fo complete")
             // When
-            sut.load() { err in
-                capturedError.append(err)
+            sut.load() { receivedResult in
+                switch (receivedResult, expectedResult) {
+                   case let (.failure(receivedError), .failure(expectedError)):
+                    XCTAssertEqual(receivedError as! RemoteFeedLoader.Error, expectedError as! RemoteFeedLoader.Error)
+                   default:
+                    XCTFail("Expecte result \(expectedResult), but got \(receivedResult) instead")
+                }
+                exp.fulfill()
             }
+            
             let jsonData = makeItemsJSON([])
             client.complete(withStatusCode: statusCode, data: jsonData, at: index)
-            
-            // Then
-            XCTAssertEqual(capturedError, [.failure(.invalidData)])
+            wait(for: [exp], timeout: 5.0)
         }
     }
     
@@ -58,7 +64,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_load_deliversErrorOn200HTTPResposeWithInvalidJSON(){
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(.invalidData), when: {
+        expect(sut, toCompleteWith: failure(.invalidData), when: {
             let invalidJSON = Data("invalid json".utf8)
             client.complete(withStatusCode: 200, data: invalidJSON)
         })
@@ -146,6 +152,10 @@ extension RemoteFeedLoaderTests {
         return (sut, client)
     }
     
+    private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {
+        return .failure(error)
+    }
+    
     private func trackForMemoryInstance(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
         addTeardownBlock { [weak instance] in
             XCTAssertNil(instance, "Potential memory leak", file: file, line: line)
@@ -176,16 +186,27 @@ extension RemoteFeedLoaderTests {
     }
     
     
-    private func expect(_ sut: RemoteFeedLoader, toCompleteWith result: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-        var capturedResults = [RemoteFeedLoader.Result]()
+    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        
+        let exp = expectation(description: "Waif for load completion")
+        
         // When
-        sut.load() { err in
-            capturedResults.append(err)
+        sut.load() { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedResult),.success(expectedResult)):
+                XCTAssertEqual(receivedResult, expectedResult, file: file, line: line)
+            case let (.failure(receivedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+            default:
+                XCTFail("Expecte result \(expectedResult), but got \(receivedResult) instead", file: file, line: line)
+
+            }
+            
+            exp.fulfill()
         }
         
         action()
-        XCTAssertEqual(capturedResults, [result], file: file, line: line)
-        
+        wait(for: [exp], timeout: 5.0)
         
     }
 }
