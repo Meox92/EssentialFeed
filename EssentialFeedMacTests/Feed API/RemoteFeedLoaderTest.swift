@@ -156,11 +156,7 @@ extension RemoteFeedLoaderTests {
         return .failure(error)
     }
     
-    private func trackForMemoryInstance(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
-        addTeardownBlock { [weak instance] in
-            XCTAssertNil(instance, "Potential memory leak", file: file, line: line)
-        }
-    }
+
     
     
     private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) ->(model: FeedItem, json: [String: Any]) {
