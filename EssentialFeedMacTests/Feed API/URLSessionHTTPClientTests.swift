@@ -10,26 +10,7 @@
 import XCTest
 import EssentialFeedMac
 
-class URLSessionHTTPClient {
-    private let session: URLSession
-    
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
-    
-    struct UnexpectedError : Error {}
-    func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
-        session.dataTask(with: url) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-            } else if let data = data, let response = response as? HTTPURLResponse{
-                completion(.success(data, response))
-            } else {
-                completion(.failure(UnexpectedError()))
-            }
-        }.resume()
-    }
-}
+
 
 class URLSessionHTTPClientTests: XCTestCase {
     
@@ -169,7 +150,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         return  NSError(domain: "Any error", code: 0, userInfo: nil)
     }
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient()
         trackForMemoryInstance(sut)
         return sut
