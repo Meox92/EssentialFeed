@@ -57,7 +57,6 @@ class EssentialFeedMacEndToEndTests: XCTestCase {
     }
     
     
-    
     private func expectedItem(at index: Int) -> FeedItem {
         return FeedItem(
             id: id(at: index),
