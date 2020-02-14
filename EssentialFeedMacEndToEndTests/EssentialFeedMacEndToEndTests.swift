@@ -56,7 +56,6 @@ class EssentialFeedMacEndToEndTests: XCTestCase {
         return receivedResult
     }
     
-    
     private func expectedItem(at index: Int) -> FeedItem {
         return FeedItem(
             id: id(at: index),
@@ -65,7 +64,6 @@ class EssentialFeedMacEndToEndTests: XCTestCase {
             imageURL: imageURL(at:index)
         )
     }
-    
     
     private func id(at index: Int) -> UUID {
         return UUID(uuidString: [
