@@ -37,8 +37,6 @@ class URLSessionHTTPClientTests: XCTestCase {
         makeSUT().get(from: anyURL()) { _ in  }
 
         wait(for: [exp], timeout: 1.0)
-
-
     }
     
     func test_getFromURL_failsOnRequestError() {
@@ -47,9 +45,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         
         XCTAssertEqual(receivedError as NSError?, error)
     }
-    
-    
-    
+        
     
     func test_getFromURL_failsOnInvalidCases() {
         XCTAssertNotNil(resultErrorFor(data: nil, response: nil, error: nil))

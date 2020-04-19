@@ -9,7 +9,7 @@
 import XCTest
 import EssentialFeedMac
 
-class RemoteFeedLoaderTests: XCTestCase {
+class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     
     func test_init_doesNotRequestData() {
         let (_, client) = makeSUT()
@@ -140,7 +140,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
 }
 
-extension RemoteFeedLoaderTests {
+extension LoadFeedFromRemoteUseCaseTests {
     // Private helpers
     private func makeSUT(with url: URL? = URL(string: "http://url-di-default"), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteFeedLoader, client: HTTPClientSpy){
         let client = HTTPClientSpy()

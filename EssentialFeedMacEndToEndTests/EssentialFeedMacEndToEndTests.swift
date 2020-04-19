@@ -12,6 +12,7 @@ import EssentialFeedMac
 class EssentialFeedMacEndToEndTests: XCTestCase {
 
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() {
+        
         switch getFeedResult() {
         case let .success(items)?:
             // no for loops because they are not giving enought context of the errors
@@ -38,8 +39,8 @@ class EssentialFeedMacEndToEndTests: XCTestCase {
     // MARKS: Private helpers
     
     private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadFeedResult? {
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        let client = URLSessionHTTPClient()
+        let testServerURL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5c52cdd0b8a045df091d2fff/1548930512083/feed-case-study-test-api-feed.json")!
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteFeedLoader(url: testServerURL, client: client)
         trackForMemoryInstance(client, file: file, line: line)
         trackForMemoryInstance(loader, file: file, line: line)
@@ -52,6 +53,7 @@ class EssentialFeedMacEndToEndTests: XCTestCase {
             exp.fulfill()
         }
         wait(for: [exp], timeout: 5.0)
+        sleep(5)
         
         return receivedResult
     }
